@@ -34,9 +34,10 @@ class Board {
     }
 
     fun pieceFromTo(columnFrom: Int, rowFrom: Int, columnTo: Int, rowTo: Int, piece: Piece): Boolean {
-        return piece.possibleSlots(Slot(columnFrom, rowFrom)).any { it.column == columnTo && it.row == rowTo }
+        val canMoveTo = piece.possibleSlots(Slot(columnFrom, rowFrom)).any { it.column == columnTo && it.row == rowTo }
+        val hasAPieceOfTheSameTeamThere = slots.find { it.column == columnTo && it.row == rowTo }?.piece?.team == piece.team
+        return canMoveTo && !hasAPieceOfTheSameTeamThere
     }
-
 }
 
 data class Slot(var column: Int, var row: Int, var piece: Piece? = null) {

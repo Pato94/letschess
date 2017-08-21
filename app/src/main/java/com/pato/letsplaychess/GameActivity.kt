@@ -6,9 +6,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.activity_game.*
-import android.widget.TextView
 
 class GameActivity : Activity() {
 
@@ -30,6 +30,7 @@ class GameActivity : Activity() {
                         slot.column = column
                         slot.row = row
                         val container = v as FrameLayout
+                        container.removeAllViews()
                         container.addView(view)
                     }
                     view.visibility = View.VISIBLE
@@ -57,22 +58,18 @@ class GameActivity : Activity() {
     }
 
     private fun inflatePiece(slot: Slot): View {
-        val view = TextView(this)
+        val view = ImageView(this)
         view.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-        view.text = when (slot.piece!!) {
-            is Pawn -> "P"
-            is Rook -> "R"
-            is Knight -> "N"
-            is Bishop -> "B"
-            is Queen -> "Q"
-            is King -> "K"
+        val isWhite = slot.piece!!.team == Team.WHITE
+        view.setImageResource(when (slot.piece!!) {
+            is Pawn -> if (isWhite) R.drawable.white_pawn else R.drawable.black_pawn
+            is Rook -> if (isWhite) R.drawable.white_rook else R.drawable.black_rook
+            is Knight -> if (isWhite) R.drawable.white_knight else R.drawable.black_knight
+            is Bishop -> if (isWhite) R.drawable.white_bishop else R.drawable.black_bishop
+            is Queen -> if (isWhite) R.drawable.white_queen else R.drawable.black_queen
+            is King -> if (isWhite) R.drawable.white_king else R.drawable.black_king
             else -> throw IllegalStateException("Unknown piece")
-        }
-
-        view.text = view.text.toString() + slot.piece!!.team.name
-
-        view.setTextColor(getColor(R.color.colorAccent))
-        view.gravity = Gravity.CENTER
+        })
 
         return view
     }
@@ -116,7 +113,7 @@ class GameActivity : Activity() {
                 params.weight = 1f
                 slot.layoutParams = params
                 if ((rowIndex + index) % 2 == 1) {
-                    slot.setBackgroundColor(Color.rgb(0, 0, 0))
+                    slot.setBackgroundColor(Color.rgb(78, 120, 55))
                 } else {
                     slot.setBackgroundColor(Color.rgb(255, 255, 255))
                 }
